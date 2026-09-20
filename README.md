@@ -292,6 +292,7 @@ The Lambda configuration uses a small amount of memory and a short timeout. AWS 
 ### AI Assistance
 
 * Claude (Anthropic)
+* ChatGPT (OpenAI)
 
 ---
 
@@ -492,7 +493,7 @@ No third-party source code was intentionally copied into the repository.
 
 **Bharat Builds / WeMakeDevs**
 
-**Team / Author:** [ADD NAME]
+**Team / Author:** Sahrin Tahiyat Khusi
 
 **Live Demo:** [ADD LINK]
 
