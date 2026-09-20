@@ -1,0 +1,72 @@
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ---- Pipeline breadcrumb ---- */
+.breadcrumb-step {
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid #1e293b; /* slate-800 */
+  color: #64748b; /* slate-500 */
+  white-space: nowrap;
+}
+
+.breadcrumb-step.active {
+  border-color: #6366f1; /* indigo-500 */
+  color: #a5b4fc; /* indigo-300 */
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.breadcrumb-step.failed {
+  border-color: #dc2626; /* red-600 */
+  color: #fca5a5; /* red-300 */
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.breadcrumb-arrow {
+  color: #334155; /* slate-700 */
+  padding: 0 0.15rem;
+}
+
+/* ---- Stage cards ---- */
+.stage-dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.stage-card.disabled {
+  opacity: 0.35;
+}
+
+/* ---- AST tree ---- */
+.ast-line {
+  white-space: pre;
+}
+
+/* ---- Tables ---- */
+table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ---- Scrollbars (subtle, no extra dependency) ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+/* ---- Error explanation panel ---- */
+#errorExplanation p {
+  line-height: 1.5;
+}

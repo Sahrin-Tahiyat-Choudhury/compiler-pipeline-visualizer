@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compiler Pipeline Visualizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="border-b border-slate-800 px-6 py-5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h1 class="text-2xl font-bold">Compiler Pipeline Visualizer</h1>
+        <p class="text-slate-400 text-sm">See how source code becomes output, stage by stage.</p>
+      </div>
+      <span class="text-xs px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+        Powered by AWS Lambda
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- ===================== PIPELINE BREADCRUMB ===================== -->
+    <div id="breadcrumb" class="flex flex-wrap items-center gap-1 mb-8 text-sm">
+      <!-- filled by app.js: Source → Tokens → AST → Semantic → IR → Output -->
+    </div>
+
+    <!-- ===================== INPUT CARD ===================== -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-5 mb-6">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <h2 class="font-semibold text-slate-200">Source Code</h2>
+        <div class="flex gap-2 flex-wrap" id="exampleButtons">
+          <!-- filled by app.js -->
+        </div>
+      </div>
+
+      <textarea
+        id="sourceInput"
+        spellcheck="false"
+        class="w-full h-36 bg-slate-950 text-slate-100 font-mono text-sm p-4 rounded-lg border border-slate-700 focus:outline-none focus:border-indigo-500 resize-none"
+      >let x = 10;
+let y = 20;
+print(x + y);</textarea>
+
+      <div class="flex items-center gap-3 mt-4">
+        <button
+          id="runBtn"
+          class="bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          ▶ Run
+        </button>
+        <span id="statusText" class="text-sm text-slate-400"></span>
+      </div>
+    </section>
+
+        <!-- ===================== ERROR BANNER ===================== -->
+    <section id="errorBanner" class="hidden bg-red-950/50 border border-red-800 rounded-xl p-5 mb-6">
+      <p class="text-red-400 font-semibold text-sm uppercase tracking-wide mb-1" id="errorStageLabel"></p>
+      <p class="text-red-200 font-mono text-sm mb-4" id="errorMessage"></p>
+
+      <!-- NEW: beginner-friendly explanation panel -->
+      <div id="errorExplanation" class="hidden border-t border-red-900 pt-4 space-y-3 text-sm">
+        <div>
+          <span class="text-red-400 font-semibold text-xs uppercase tracking-wide">Error Type</span>
+          <p id="explType" class="text-slate-200"></p>
+        </div>
+        <div>
+          <span class="text-red-400 font-semibold text-xs uppercase tracking-wide">Compiler Phase</span>
+          <p id="explPhase" class="text-slate-200"></p>
+        </div>
+        <div>
+          <span class="text-red-400 font-semibold text-xs uppercase tracking-wide">What Went Wrong</span>
+          <p id="explWhat" class="text-slate-300"></p>
+        </div>
+        <div>
+          <span class="text-red-400 font-semibold text-xs uppercase tracking-wide">How To Fix It</span>
+          <p id="explFix" class="text-slate-300"></p>
+        </div>
+        <div id="explExampleBlock">
+          <span class="text-red-400 font-semibold text-xs uppercase tracking-wide">Corrected Example</span>
+          <pre id="explExample" class="font-mono text-xs bg-slate-950 rounded-lg p-3 mt-1 text-emerald-300"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PIPELINE STAGE CARDS ===================== -->
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- TOKENS -->
+      <section class="stage-card bg-slate-900 border border-slate-800 rounded-xl p-5" id="card-tokens">
+        <h2 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <span class="stage-dot">1</span> Tokens
+        </h2>
+        <div class="overflow-auto max-h-80 rounded-lg border border-slate-800">
+          <table class="w-full text-sm font-mono">
+            <thead class="bg-slate-800/60 text-slate-400 sticky top-0">
+              <tr>
+                <th class="text-left px-3 py-2">Type</th>
+                <th class="text-left px-3 py-2">Value</th>
+                <th class="text-left px-3 py-2">Line</th>
+              </tr>
+            </thead>
+            <tbody id="tokensBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- AST -->
+      <section class="stage-card bg-slate-900 border border-slate-800 rounded-xl p-5" id="card-ast">
+        <h2 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <span class="stage-dot">2</span> Abstract Syntax Tree
+        </h2>
+        <div id="astTree" class="font-mono text-sm overflow-auto max-h-80 leading-relaxed"></div>
+      </section>
+
+      <!-- SEMANTIC -->
+      <section class="stage-card bg-slate-900 border border-slate-800 rounded-xl p-5" id="card-semantic">
+        <h2 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <span class="stage-dot">3</span> Semantic Analysis
+        </h2>
+        <div id="semanticContent" class="text-sm">
+          <p class="text-slate-500">Symbol table will appear here.</p>
+        </div>
+      </section>
+
+      <!-- IR -->
+      <section class="stage-card bg-slate-900 border border-slate-800 rounded-xl p-5" id="card-ir">
+        <h2 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <span class="stage-dot">4</span> Intermediate Code
+        </h2>
+        <pre id="irContent" class="font-mono text-sm bg-slate-950 rounded-lg p-4 overflow-auto max-h-80 text-emerald-300"></pre>
+      </section>
+
+      <!-- OUTPUT (full width) -->
+      <section class="stage-card bg-slate-900 border border-slate-800 rounded-xl p-5 md:col-span-2" id="card-output">
+        <h2 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <span class="stage-dot">5</span> Execution Output
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <p class="text-xs text-slate-500 mb-2 uppercase tracking-wide">Console</p>
+            <pre id="outputConsole" class="font-mono text-sm bg-black rounded-lg p-4 min-h-[6rem] text-lime-400"></pre>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 mb-2 uppercase tracking-wide">Final Variable State</p>
+            <table class="w-full text-sm font-mono rounded-lg border border-slate-800 overflow-hidden">
+              <thead class="bg-slate-800/60 text-slate-400">
+                <tr><th class="text-left px-3 py-2">Variable</th><th class="text-left px-3 py-2">Value</th></tr>
+              </thead>
+              <tbody id="finalStateBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-slate-600 py-8">
+    Built for Bharat Builds / WeMakeDevs · AWS Lambda backend · Assisted by Claude
+  </footer>
+
+    <script src="config.js"></script>
+    <script src="examples.js"></script>
+    <script src="errorExplanations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

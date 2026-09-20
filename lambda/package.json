@@ -1,0 +1,7 @@
+{
+  "name": "compiler-visualizer-lambda",
+  "version": "1.0.0",
+  "description": "Backend compiler pipeline for the Compiler Pipeline Visualizer.",
+  "main": "index.js",
+  "dependencies": {}
+}
