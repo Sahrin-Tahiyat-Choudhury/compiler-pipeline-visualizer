@@ -4,7 +4,7 @@ An interactive educational tool that demonstrates how a compiler processes sourc
 
 Built for the **Bharat Builds / WeMakeDevs Hackathon**.
 
-**Live Demo:** [ADD LINK]
+**Live Demo:** https://sahrin-tahiyat-choudhury.github.io/compiler-pipeline-visualizer/
 **Demo Video:** [ADD LINK]
 
 ---
@@ -495,6 +495,6 @@ No third-party source code was intentionally copied into the repository.
 
 **Team / Author:** Sahrin Tahiyat Khusi
 
-**Live Demo:** [ADD LINK]
+**Live Demo:** https://sahrin-tahiyat-choudhury.github.io/compiler-pipeline-visualizer/
 
 **Demo Video:** [ADD LINK]
